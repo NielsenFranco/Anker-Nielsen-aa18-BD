@@ -1,0 +1,78 @@
+EJERCICIO 1 ---Vista de Estudiantes con Carrera---
+
+CREATE VIEW vista_estudiantes_carreras AS
+SELECT e.nombre, e.apellido, c.nombre AS carrera
+FROM estudiantes e
+JOIN carreras c ON c.idcarrera = e.idcarrera
+ORDER BY e.nombre, e.apellido, c.nombre;
+
+
+EJERCICIO 2 ---Vista de Materias por Carrera---
+
+CREATE VIEW vista_materias_carrera AS
+SELECT c.nombre AS carrera, m.nombre AS materia
+FROM carreras c
+JOIN materias m ON m.idcarrera = c.idcarrera
+ORDER BY c.nombre, m.nombre;
+
+
+EJERCICIO 3 ---Vista de Estudiantes con sus Notas---
+
+CREATE VIEW vista_notas_estudiantes AS
+SELECT e.nombre AS nombre_estudiante, 
+       e.apellido AS apellido_estudiante, 
+       m.nombre AS materia, n.valor AS nota, 
+       t.descripcion AS tipo_nota
+FROM estudiantes e
+JOIN notas n ON n.idestudiante = e.idestudiante
+JOIN materias m ON m.idmateria = n.idmateria
+JOIN tiponotas t ON t.idtiponota = n.idtiponota
+WHERE t.descripcion = 'Final' 
+ORDER BY e.nombre, e.apellido, m.nombre;
+
+
+EJERCICIO 4 ---Vista de Inscripciones Activas---
+
+CREATE VIEW vista_inscripciones_activas AS
+SELECT e.nombre AS nombre_estudiante, 
+       e.apellido AS apellido_estudiante, 
+       m.nombre AS materia,
+       i.estado AS estado_inscripcion
+FROM inscripciones i
+JOIN estudiantes e ON e.idestudiante = i.idestudiante
+JOIN materias m ON m.idmateria = i.idmateria
+WHERE i.estado = 'Activo'
+ORDER BY e.nombre, e.apellido, m.nombre;  
+
+
+EJERCICIO 5 ---Vista de Correlatividades---
+
+CREATE VIEW vista_correlatividades AS
+SELECT mp.nombre AS materia_padre, 
+       mh.nombre AS materia_hijo
+FROM correlatividades c
+JOIN materias mp ON c.idmateriapadre = mp.idmateria
+JOIN materias mh ON c.idmateriahijo = mh.idmateria
+ORDER BY mh.nombre, mp.nombre;
+
+
+EJERCICIO 6 ---Vista de Permisos por Usuario---
+
+CREATE VIEW vista_permisos_usuarios AS
+SELECT u.nombre AS nombre_usuario, 
+       u.apellido AS apellido_usuario, 
+       p.nombre AS permiso  
+FROM usuarios u   
+JOIN roles_permisos rp ON rp.idrol = u.idrol   
+JOIN permisos p ON p.idpermiso = rp.idpermiso   
+ORDER BY u.nombre, u.apellido, p.nombre;
+
+
+EJERCICIO 7 ---Vista de Mesas de Examen por Materia---
+
+CREATE VIEW vista_mesas_examen AS
+SELECT m.nombre AS materia,
+       DATE_FORMAT(me.fechahora, '%d/%m/%Y %H:%i') AS fecha_hora_mesa -- Cambia el formato a día/mes/año hora:minuto
+FROM mesas me   
+JOIN materias m ON m.idmateria = me.idmateria
+ORDER BY m.nombre, me.fechahora;
